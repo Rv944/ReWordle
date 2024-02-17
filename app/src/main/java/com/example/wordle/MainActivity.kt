@@ -60,6 +60,65 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.**/
+/**# Android Project 1 - *Wordle*
+
+Submitted by: **Rothmel Fortune II**
+
+**Wordle** is an android app that recreates a simple version of the popular word game [Wordle](https://www.nytimes.com/games/wordle/index.html).
+
+Time spent: **26** hours spent in total
+
+## Required Features
+
+The following **required** functionality is completed:
+
+- [/] **User has 3 chances to guess a random 4 letter word**
+- [/] **After 3 guesses, user should no longer be able to submit another guess**
+- [/] **After each guess, user sees the "correctness" of the guess**
+- [/] **After all guesses are taken, user can see the target word displayed**
+
+The following **optional** features are implemented:
+
+- [ ] User can toggle betweeen different word lists
+- [ ] User can see the 'correctness' of their guess through colors on the word
+- [/] User sees a visual change after guessing the correct word
+- [/] User can tap a 'Reset' button to get a new word and clear previous guesses
+- [ ] User will get an error message if they input an invalid guess
+- [ ] User can see a 'streak' record of how many words they've guessed correctly.
+
+The following **additional** features are implemented:
+
+* [ ] List anything else that you can get done to improve the app functionality!
+
+## Video Walkthrough
+
+Here's a walkthrough of implemented user stories:
+
+<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+
+<https://media.giphy.com/media/JhBUPwIQXrnfcbUVFm/giphy.gif>
+
+## Notes
+
+Describe any challenges encountered while building the app.
+
+## License
+
+Copyright [2024] [name of copyright owner]
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+**/
+
 package com.example.wordle
 
 import android.annotation.SuppressLint
@@ -69,8 +128,8 @@ import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
-import com.google.android.material.textfield.TextInputEditText
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -91,7 +150,7 @@ class MainActivity : AppCompatActivity() {
 
         val wordReveal = findViewById<TextView>(R.id.correctWord)
 
-        val userInputField = findViewById<TextInputEditText>(R.id.userInputField)
+        val userInputField = findViewById<EditText>(R.id.userInputField)
         val firstWord = findViewById<TextView>(R.id.firstGuess)
         val guess1text = findViewById<TextView>(R.id.guess1text)
         val guess1checkText = findViewById<TextView>(R.id.guess1check)
@@ -230,7 +289,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun saveInputAndCloseKeyboard(guessInput: TextView, userInputField: TextInputEditText) {
+    private fun saveInputAndCloseKeyboard(guessInput: TextView, userInputField: EditText) {
         guessWord = userInputField.text.toString().uppercase()
         guessInput.text = guessWord
         userInputField.text?.clear()
@@ -239,3 +298,35 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    /**
+     * Parameters / Fields:
+     *   wordToGuess : String - the target word the user is trying to guess
+     *   guess : String - what the user entered as their guess
+     *
+     * Returns a String of 'O', '+', and 'X', where:
+     *   'O' represents the right letter in the right place
+     *   '+' represents the right letter in the wrong place
+     *   'X' represents a letter not in the target word
+     */
+    private fun checkGuess(guess: String, wordToGuess: String) : String {
+        var result = ""
+        for (i in 0..3) {
+            result += if (guess[i] == wordToGuess[i]) {
+                "O"
+            } else if (guess[i] in wordToGuess) {
+                "+"
+            } else {
+                "X"
+            }
+        }
+        return result
+    }
+
+    // extension function to hide soft keyboard programmatically
+    private fun Activity.closeKeyboard(){
+        (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).apply {
+            hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+        }
+    }
+
+}
